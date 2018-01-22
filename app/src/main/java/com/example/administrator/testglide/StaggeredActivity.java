@@ -170,7 +170,7 @@ public class StaggeredActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(View view) {
                             int position=recyclerview.getChildAdapterPosition(view);
-                            SnackbarUtil.ShortSnackbar(coordinatorLayout,"点击第"+position+"个" + meizis.get(position).getUrl(),SnackbarUtil.Info).show();
+//                            SnackbarUtil.ShortSnackbar(coordinatorLayout,"点击第"+position+"个" + meizis.get(position).getUrl(),SnackbarUtil.Info).show();
                             //点击图片触发跳转界面，显示
                             //生成一个Intent对象
                             Intent intent = new Intent(StaggeredActivity.this,ShowActivity.class);
