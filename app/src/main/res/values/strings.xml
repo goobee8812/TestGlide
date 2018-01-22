@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TestGlide</string>
+    <string name="title_activity_staggerde">网格布局</string>
+    <string name="title_activity_show">ShowActivity</string>
+</resources>
