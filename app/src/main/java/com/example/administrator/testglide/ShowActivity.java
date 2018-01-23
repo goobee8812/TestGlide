@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -18,17 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
-import com.bumptech.glide.request.target.Target;
-
-import java.io.File;
 
 public class ShowActivity extends AppCompatActivity {
 
     private static final String TAG = "ShowActivity";
     private ImageView showImage = null;
     private PopupWindow mPopWindow;
-
+    private static int xCoordinates;
+    private static int yCoordinates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,16 +38,32 @@ public class ShowActivity extends AppCompatActivity {
         //从Intent当中根据key取得value
         String url = intent.getStringExtra(Utils.URL_STRING);
         Glide.with(ShowActivity.this).load(url).into(showImage);
+
         showImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(ShowActivity.this,"LongClick",Toast.LENGTH_SHORT).show();
-                showPopupWindow();
+//                Toast.makeText(ShowActivity.this,"LongClick",Toast.LENGTH_SHORT).show();
+                showPopupWindow(xCoordinates,yCoordinates);
                 return true;
             }
         });
+        showImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: //点击下去
+                        xCoordinates = (int)event.getRawX();
+                        yCoordinates = (int)event.getRawY();
+                        Log.d(TAG, "onTouch: " + xCoordinates + "---" + yCoordinates);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
-    private void showPopupWindow() {
+    private void showPopupWindow(int x,int y) {
         //设置contentView
         View contentView = LayoutInflater.from(ShowActivity.this).inflate(R.layout.popuplayout, null);
         mPopWindow = new PopupWindow(contentView,
@@ -67,7 +81,8 @@ public class ShowActivity extends AppCompatActivity {
 
         //显示PopupWindow
         View rootview = LayoutInflater.from(ShowActivity.this).inflate(R.layout.activity_show, null);
-        mPopWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
-
+//        mPopWindow.showAtLocation(rootview, Gravity.TOP, x, y);
+        mPopWindow.showAsDropDown(rootview,x,y); //在长按的位置弹出“保存”按钮
     }
+
 }
