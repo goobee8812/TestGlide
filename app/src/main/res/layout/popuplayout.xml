@@ -6,10 +6,11 @@
     <TextView
         android:id="@+id/save_img"
         android:background="#50484b"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
         android:text="@string/save_str"
+        android:gravity="center"
         android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:paddingLeft="15dp"

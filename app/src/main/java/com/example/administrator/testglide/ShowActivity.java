@@ -27,6 +27,7 @@ public class ShowActivity extends AppCompatActivity {
     private PopupWindow mPopWindow;
     private static int xCoordinates;
     private static int yCoordinates;
+    private static int xLength;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,7 @@ public class ShowActivity extends AppCompatActivity {
         //从Intent当中根据key取得value
         String url = intent.getStringExtra(Utils.URL_STRING);
         Glide.with(ShowActivity.this).load(url).into(showImage);
-
+        xLength = getxLength();
         showImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -52,9 +53,9 @@ public class ShowActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN: //点击下去
-                        xCoordinates = (int)event.getRawX();
+                        xCoordinates = (int)event.getRawX() - xLength;
                         yCoordinates = (int)event.getRawY();
-                        Log.d(TAG, "onTouch: " + xCoordinates + "---" + yCoordinates);
+                        Log.d(TAG, "onTouch: " + xCoordinates + "---" + yCoordinates + "---Xlength：" + xLength);
                         break;
                     default:
                         break;
@@ -71,10 +72,12 @@ public class ShowActivity extends AppCompatActivity {
         mPopWindow.setContentView(contentView);
         //设置各个控件的点击响应
         TextView tv1 = (TextView)contentView.findViewById(R.id.save_img);
-
+//        Toast.makeText(ShowActivity.this,tv1.getMeasuredWidth() + "",Toast.LENGTH_SHORT).show();
         tv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(ShowActivity.this,"SaveImage",Toast.LENGTH_SHORT).show();
+                //处理下载图片
                 mPopWindow.dismiss();
             }
         });
@@ -85,4 +88,19 @@ public class ShowActivity extends AppCompatActivity {
         mPopWindow.showAsDropDown(rootview,x,y); //在长按的位置弹出“保存”按钮
     }
 
+    private int getxLength(){
+        //设置contentView
+        View contentView = LayoutInflater.from(ShowActivity.this).inflate(R.layout.popuplayout, null);
+        mPopWindow = new PopupWindow(contentView,
+                WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+        mPopWindow.setContentView(contentView);
+        //设置各个控件的点击响应
+        TextView tv1 = (TextView)contentView.findViewById(R.id.save_img);
+        int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        tv1.measure(w, h);
+        int height =tv1.getMeasuredHeight();
+        int width =tv1.getMeasuredWidth();
+        return width;
+    }
 }
